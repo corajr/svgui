@@ -53,7 +53,8 @@ public:
         HighGain,
         BlueOnBlack,
         Cividis,
-        Magma
+        Magma,
+        Sinebow
     };
 
     int getMap() const { return m_map; }

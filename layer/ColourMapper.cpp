@@ -143,7 +143,7 @@ ColourMapper::~ColourMapper()
 int
 ColourMapper::getColourMapCount()
 {
-    return 15;
+    return 16;
 }
 
 QString
@@ -170,6 +170,7 @@ ColourMapper::getColourMapLabel(int n)
     case BlueOnBlack:      return QObject::tr("Blue on Black");
     case Cividis:          return QObject::tr("Cividis");
     case Magma:            return QObject::tr("Magma");
+    case Sinebow:          return QObject::tr("Sinebow");
     }
 
     return QObject::tr("<unknown>");
@@ -197,6 +198,7 @@ ColourMapper::getColourMapId(int n)
     case BlueOnBlack:      return "Blue on Black";
     case Cividis:          return "Cividis";
     case Magma:            return "Magma";
+    case Sinebow:          return "Sinebow";
     }
 
     return "<unknown>";
@@ -222,6 +224,7 @@ ColourMapper::getColourMapById(QString id)
     else if (id == "Blue on Black")    { map = BlueOnBlack; }
     else if (id == "Cividis")          { map = Cividis; }
     else if (id == "Magma")            { map = Magma; }
+    else if (id == "Sinebow")          { map = Sinebow; }
 
     if (map == (ColourMap)getColourMapCount()) {
         return -1;
@@ -258,6 +261,7 @@ ColourMapper::getBackwardCompatibilityColourMap(int n)
     case BlueOnBlack:      return 6;
     case Cividis:          return 6;
     case Magma:            return 1;
+    case Sinebow:          return 1;
     }
 
     return 0;
@@ -424,6 +428,14 @@ ColourMapper::map(double value) const
         hsv = false;
         mapDiscrete(norm, magma, r, g, b);
         break;
+
+    case Sinebow:
+        double t = norm * 3;
+        r = pow(sin(M_PI * (t + (0.0 / 3.0))), 2.0) * norm;
+        g = pow(sin(M_PI * (t + (1.0 / 3.0))), 2.0) * norm;
+        b = pow(sin(M_PI * (t + (2.0 / 3.0))), 2.0) * norm;
+        hsv = false;
+        break;
     }
 
     if (hsv) {
@@ -485,6 +497,9 @@ ColourMapper::getContrastingColour() const
 
     case Magma:
         return Qt::white;
+
+    case Sinebow:
+        return Qt::white;
     }
 
     return Qt::white;
@@ -515,6 +530,7 @@ ColourMapper::hasLightBackground() const
     case BlueOnBlack:
     case Cividis:
     case Magma:
+    case Sinebow:
         
     default:
         return false;
